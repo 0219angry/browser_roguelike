@@ -66,11 +66,10 @@ function calcIntent(enemy: Enemy, playerPos: Vec2): Intent {
   if (dist === 1) {
     return { kind: 'melee', targetPos: playerPos };
   }
-  // 隣接していない場合は近づく
-  const movePos: Vec2 = {
-    x: enemy.pos.x + Math.sign(dx),
-    y: enemy.pos.y + Math.sign(dy),
-  };
+  // 隣接していない場合は近づく（4方向移動: 距離が大きい軸を優先）
+  const movePos: Vec2 = Math.abs(dx) >= Math.abs(dy)
+    ? { x: enemy.pos.x + Math.sign(dx), y: enemy.pos.y }
+    : { x: enemy.pos.x, y: enemy.pos.y + Math.sign(dy) };
   return { kind: 'melee', targetPos: movePos };
 }
 
@@ -203,18 +202,18 @@ function processEnemyTurn(state: GameState, enemyId: string): GameState {
     }
 
     // 移動先が空いていれば移動
+    const isPlayerPos = target.x === state.player.pos.x && target.y === state.player.pos.y;
+    const occupied = state.enemies.some(e => e.id !== enemyId && e.pos.x === target.x && e.pos.y === target.y);
     if (
+      !isPlayerPos &&
       inBounds(target.x, target.y) &&
       state.floor[target.y][target.x].kind !== 'wall' &&
-      target.x !== state.player.pos.x || target.y !== state.player.pos.y
+      !occupied
     ) {
-      const occupied = state.enemies.some(e => e.id !== enemyId && e.pos.x === target.x && e.pos.y === target.y);
-      if (!occupied && !(target.x === state.player.pos.x && target.y === state.player.pos.y)) {
-        const newEnemies = state.enemies.map(e =>
-          e.id === enemyId ? { ...e, pos: target } : e
-        );
-        return { ...state, enemies: newEnemies };
-      }
+      const newEnemies = state.enemies.map(e =>
+        e.id === enemyId ? { ...e, pos: target } : e
+      );
+      return { ...state, enemies: newEnemies };
     }
   }
 
