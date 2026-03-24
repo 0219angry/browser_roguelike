@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stair Pressure - Phase 1</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0d0d1a;
+      color: #eee;
+      font-family: monospace;
+      display: flex;
+      gap: 16px;
+      padding: 16px;
+      min-height: 100vh;
+    }
+    #game-area { display: flex; flex-direction: column; gap: 8px; }
+    canvas { border: 2px solid #444; cursor: pointer; }
+    #ui {
+      width: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .stat { font-size: 1.1em; }
+    #phase { font-size: 1.2em; font-weight: bold; color: #f39c12; }
+    button {
+      background: #2c2c3e;
+      color: #eee;
+      border: 1px solid #555;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 0.95em;
+      border-radius: 4px;
+      width: 100%;
+    }
+    button:hover:not(:disabled) { background: #3c3c5e; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    #attack-buttons { display: flex; flex-direction: column; gap: 4px; }
+    #log {
+      font-size: 0.8em;
+      color: #aaa;
+      height: 160px;
+      overflow: hidden;
+      border-top: 1px solid #333;
+      padding-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .legend { font-size: 0.75em; color: #888; line-height: 1.6; }
+    .legend span { color: #eee; }
+  </style>
+</head>
+<body>
+  <div id="game-area">
+    <canvas id="game-canvas"></canvas>
+  </div>
+  <div id="ui">
+    <div id="phase">あなたのターン</div>
+    <div class="stat" id="hp">HP: 24 / 24</div>
+    <div class="stat" id="ap">AP: 2 / 2</div>
+    <div class="stat" id="turn">ターン: 1</div>
+    <hr style="border-color:#333">
+    <div id="attack-buttons"></div>
+    <button id="defend-btn">防御 [Space]</button>
+    <button id="end-turn">ターン終了 [Enter]</button>
+    <button id="restart-btn">リスタート</button>
+    <div class="legend">
+      移動: WASD / 矢印キー<br>
+      攻撃: 隣接敵をクリック<br>
+      <span>★</span> プレイヤー &nbsp;
+      <span style="color:#e74c3c">⚔</span> 敵<br>
+      <span style="color:#f39c12">■</span> 階段 &nbsp;
+      赤ハイライト: 攻撃予告
+    </div>
+    <div id="log"></div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
